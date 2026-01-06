@@ -1,7 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+
+// ... (imports remain the same)
 import { ColumnSchema } from '@/types/csv';
 import { DynamicChart } from '@/components/charts/DynamicChart';
 import { ChartControls } from '@/components/charts/ChartControls';
@@ -11,7 +13,7 @@ import { Loader2, AlertCircle, FileSpreadsheet, FileText, ArrowRight, BarChart3,
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 
-export default function DashboardPage() {
+function DashboardContent() {
     const searchParams = useSearchParams();
     const path = searchParams.get('path');
 
@@ -271,3 +273,16 @@ export default function DashboardPage() {
         </div>
     );
 }
+
+export default function DashboardPage() {
+    return (
+        <Suspense fallback={
+            <div className="h-full flex items-center justify-center">
+                <Loader2 className="w-16 h-16 animate-spin text-blue-600" />
+            </div>
+        }>
+            <DashboardContent />
+        </Suspense>
+    );
+}
+

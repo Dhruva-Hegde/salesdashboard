@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { ColumnSchema } from '@/types/csv';
 import { DataTable } from '@/components/table/DataTable';
@@ -8,7 +8,7 @@ import { DynamicFilters } from '@/components/filters/DynamicFilters';
 import { Loader2, AlertCircle, FileSpreadsheet } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-export default function TablePage() {
+function TableContent() {
     const searchParams = useSearchParams();
     const path = searchParams.get('path');
 
@@ -132,3 +132,16 @@ export default function TablePage() {
         </div>
     );
 }
+
+export default function TablePage() {
+    return (
+        <Suspense fallback={
+            <div className="h-full flex items-center justify-center p-8">
+                <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+            </div>
+        }>
+            <TableContent />
+        </Suspense>
+    );
+}
+
